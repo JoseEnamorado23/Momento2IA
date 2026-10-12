@@ -1,0 +1,48 @@
+{
+ "negative": {
+  "id": 169,
+  "input": {
+   "age": 37,
+   "gender": "Male",
+   "polyuria": "No",
+   "polydipsia": "No",
+   "sudden_weight_loss": "No",
+   "weakness": "No",
+   "polyphagia": "No",
+   "genital_thrush": "No",
+   "visual_blurring": "No",
+   "itching": "No",
+   "irritability": "No",
+   "delayed_healing": "No",
+   "partial_paresis": "No",
+   "muscle_stiffness": "No",
+   "alopecia": "No",
+   "obesity": "No"
+  },
+  "label": 0,
+  "expected": 0.11358454078435898
+ },
+ "positive": {
+  "id": 93,
+  "input": {
+   "age": 36,
+   "gender": "Female",
+   "polyuria": "Yes",
+   "polydipsia": "Yes",
+   "sudden_weight_loss": "No",
+   "weakness": "Yes",
+   "polyphagia": "Yes",
+   "genital_thrush": "No",
+   "visual_blurring": "Yes",
+   "itching": "Yes",
+   "irritability": "No",
+   "delayed_healing": "Yes",
+   "partial_paresis": "Yes",
+   "muscle_stiffness": "No",
+   "alopecia": "No",
+   "obesity": "No"
+  },
+  "label": 1,
+  "expected": 0.9945170283317566
+ }
+}

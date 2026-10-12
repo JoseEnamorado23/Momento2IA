@@ -1,0 +1,22 @@
+{
+  "name": "momento2ia-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Despliegue web (inferencia en el navegador) de los modelos Keras de cáncer de mama y diabetes",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node test/verify.mjs",
+    "export": "python scripts/export_models.py"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}

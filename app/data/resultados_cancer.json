@@ -1,0 +1,79 @@
+{
+ "dataset": "cancer",
+ "modelo": "Dense[128, 64, 32]",
+ "config": {
+  "familia": "densa",
+  "units": [
+   128,
+   64,
+   32
+  ],
+  "dropout": 0.4,
+  "l2": 0.0,
+  "lr": 0.003,
+  "batch": 16
+ },
+ "usa_cluster": false,
+ "n_features": 30,
+ "n_train": 398,
+ "n_val": 85,
+ "n_test": 86,
+ "train": {
+  "loss": 0.05745518844174167,
+  "accuracy": 0.9748743718592965
+ },
+ "val": {
+  "loss": 0.060363674633112985,
+  "accuracy": 0.9882352941176471
+ },
+ "test": {
+  "loss": 0.01643257896439746,
+  "accuracy": 1.0
+ },
+ "cv": {
+  "loss_mean": 0.13782263098663247,
+  "loss_std": 0.11046657066078631,
+  "acc_mean": 0.9669029209621993,
+  "acc_std": 0.01984511675888657
+ },
+ "cumple": {
+  "train": false,
+  "val": false,
+  "test": true,
+  "cv": false
+ },
+ "test_report": {
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "tn": 54,
+  "fp": 0,
+  "fn": 0,
+  "tp": 32
+ },
+ "veredicto": "La meta se cumple solo en test, no en ambos, y no en la CV.",
+ "baseline": {
+  "Densa": {
+   "modelo": "Densa",
+   "par\u00e1metros": 4097,
+   "\u00e9pocas": 56,
+   "loss_train": 0.03208496272541623,
+   "acc_train": 0.992462311557789,
+   "loss_val": 0.06866450922444894,
+   "acc_val": 0.9764705882352941,
+   "loss_test": 0.029122624587079326,
+   "acc_test": 0.9883720930232558
+  },
+  "Conv1D": {
+   "modelo": "Conv1D",
+   "par\u00e1metros": 2721,
+   "\u00e9pocas": 161,
+   "loss_train": 0.1852186978778096,
+   "acc_train": 0.9346733668341709,
+   "loss_val": 0.17473434243497252,
+   "acc_val": 0.9176470588235294,
+   "loss_test": 0.12642514521093745,
+   "acc_test": 0.9302325581395349
+  }
+ }
+}

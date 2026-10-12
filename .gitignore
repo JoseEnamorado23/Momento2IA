@@ -1,0 +1,22 @@
+# Material archivado (no se sube)
+_archivo/
+
+# Dependencias y builds
+node_modules/
+.next/
+out/
+.vercel/
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Logs, secretos y archivos del sistema
+*.log
+.env
+.env.*
+.DS_Store
+Thumbs.db

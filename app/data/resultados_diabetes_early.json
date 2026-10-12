@@ -1,0 +1,97 @@
+{
+ "dataset": "diabetes_early",
+ "duplicados": {
+  "total": 520,
+  "duplicadas": 269,
+  "unicas": 251
+ },
+ "configs_entrenadas": 14,
+ "configs_generadas": 26,
+ "modelo": "Conv1D[16x5] relu",
+ "config": {
+  "familia": "conv1d",
+  "filters": 16,
+  "kernel": 5,
+  "act": "relu",
+  "bn": false,
+  "dropout": 0.2,
+  "l2": 0.0001,
+  "lr": 0.001,
+  "batch": 8
+ },
+ "usa_cluster": false,
+ "n_features": 16,
+ "n_train": 175,
+ "n_val": 38,
+ "n_test": 38,
+ "train": {
+  "loss": 0.18572829314281067,
+  "accuracy": 0.9142857142857143
+ },
+ "val": {
+  "loss": 0.25384213103472836,
+  "accuracy": 0.8947368421052632
+ },
+ "test": {
+  "loss": 0.31109736551617034,
+  "accuracy": 0.8157894736842105
+ },
+ "cv": {
+  "loss_mean": 0.32889972818009344,
+  "loss_std": 0.06744319682907735,
+  "acc_mean": 0.8669619785898856,
+  "acc_std": 0.03269950368074155
+ },
+ "cv_ensamble": {
+  "loss_mean": 0.3103638207104761,
+  "loss_std": 0.05613417274453355,
+  "acc_mean": 0.87781469176818,
+  "acc_std": 0.041458371972837624
+ },
+ "ensamble": {
+  "train": {
+   "loss": 0.17756085088135795,
+   "accuracy": 0.9485714285714286
+  },
+  "validaci\u00f3n": {
+   "loss": 0.24398427255353297,
+   "accuracy": 0.9210526315789473
+  },
+  "test": {
+   "loss": 0.26759977353547726,
+   "accuracy": 0.8157894736842105
+  }
+ },
+ "cumple": {
+  "train": false,
+  "val": false,
+  "test": false,
+  "cv": false
+ },
+ "test_report": {
+  "precision": 0.88,
+  "recall": 0.8461538461538461,
+  "f1": 0.8627450980392157,
+  "tn": 9,
+  "fp": 3,
+  "fn": 4,
+  "tp": 22
+ },
+ "veredicto": "La meta NO se cumple en ning\u00fan conjunto (train, validaci\u00f3n, test ni CV).",
+ "con_duplicados_informativo": [
+  {
+   "index": "Keras (misma config)",
+   "loss test": 0.1595,
+   "acc test": 0.9359,
+   "\u00bfcumple meta?": false
+  },
+  {
+   "index": "Random Forest",
+   "loss test": 0.0836,
+   "acc test": 0.9872,
+   "\u00bfcumple meta?": false
+  }
+ ],
+ "fuga_test_pct": 61.53846153846154,
+ "tiempo_total_min": 31.9
+}
