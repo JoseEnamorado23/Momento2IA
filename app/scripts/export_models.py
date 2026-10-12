@@ -3,6 +3,7 @@
 Solo LEE models/, results/ y data/ (no reentrena nada ni los modifica). Escribe en:
   app/public/models/<dataset>/{model.json, preproc.json, examples.json}
   app/data/resultados_<dataset>.json   (copia de results/, usada por la sección "Sobre el modelo")
+  app/data/graficas_<dataset>.json     (historial, comparativa con sklearn y matriz de confusión, para las gráficas)
   app/test/fixtures/{cancer,diabetes,selftest}.json
 
 Uso (desde la raíz del proyecto, con el entorno donde está TensorFlow):
@@ -143,6 +144,7 @@ def export_cancer():
     write_json(base / "preproc.json", preproc)
     write_json(base / "examples.json", pick_examples(rows), indent=1)
     copy_results(res_name="cancer")
+    export_graficas("cancer", res, p, y_te)
     print("[cáncer] arquitectura:", describe(layers, len(FEATURES)))
     write_json(APP / "test" / "fixtures" / "cancer.json", {"rows": rows, "tolerance": 1e-4}, indent=None)
     return p
@@ -203,9 +205,39 @@ def export_diabetes():
     write_json(base / "preproc.json", preproc)
     write_json(base / "examples.json", pick_examples(rows), indent=1)
     copy_results(res_name="diabetes_early")
+    export_graficas("diabetes_early", res, p, y_te)
     print("[diabetes] arquitectura:", describe(layers, len(FEATURES)))
     write_json(APP / "test" / "fixtures" / "diabetes.json", {"rows": rows, "tolerance": 1e-4}, indent=None)
     return p
+
+
+def export_graficas(res_name, res, p, y_te):
+    """Datos de las gráficas: SOLO se leen de results/ (history_*.csv, comparativa_modelos_*.csv, resultados_*.json).
+    La matriz de confusión del test se recalcula con el modelo y el split exportados y debe coincidir con el reporte del notebook."""
+    h = pd.read_csv(ROOT / "results" / f"history_{res_name}.csv")
+    comp = pd.read_csv(ROOT / "results" / f"comparativa_modelos_{res_name}.csv")
+    r6 = lambda col: [round(float(v), 6) for v in h[col]]
+    history = {"loss": r6("loss"), "val_loss": r6("val_loss"), "accuracy": r6("accuracy"), "val_accuracy": r6("val_accuracy")}
+    best = int(h["val_loss"].idxmin())                          # EarlyStopping(monitor=val_loss, restore_best_weights=True)
+
+    pred = (p >= 0.5).astype(int)
+    cm = {"tn": int(((pred == 0) & (y_te == 0)).sum()), "fp": int(((pred == 1) & (y_te == 0)).sum()),
+          "fn": int(((pred == 0) & (y_te == 1)).sum()), "tp": int(((pred == 1) & (y_te == 1)).sum())}
+    rep = {k: res["test_report"][k] for k in ("tn", "fp", "fn", "tp")}
+    assert cm == rep, f"Matriz de confusión recalculada {cm} != reporte del notebook {rep}"
+    print(f"[{res_name}] matriz de confusión verificada contra el notebook: {cm}")
+
+    names = {"Keras red única": "Red neuronal (Keras)"}
+    cv = []
+    for _, r in comp.iterrows():
+        if r["modelo"] == "Keras ensamble x5":                  # no es el modelo desplegado; se omite
+            continue
+        cv.append({"modelo": names.get(r["modelo"], r["modelo"]), "keras": r["modelo"].startswith("Keras"),
+                   "acc_mean": round(float(r["cv_acc"]), 6), "acc_std": round(float(r["cv_acc_std"]), 6)})
+    # el CV de Keras de la tabla debe ser el mismo que el de resultados_*.json
+    assert abs(cv[0]["acc_mean"] - res["cv"]["acc_mean"]) < 1e-5 and cv[0]["keras"], "CV de Keras distinto a resultados_*.json"
+    write_json(APP / "data" / f"graficas_{res_name}.json",
+               {"dataset": res_name, "epochs": len(h), "best_epoch": best, "history": history, "confusion": cm, "cv": cv}, indent=1)
 
 
 def copy_results(res_name):

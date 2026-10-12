@@ -2,8 +2,6 @@
 
 Una sola página (Next.js) con dos pestañas, **Cáncer de mama (Wisconsin)** y **Diabetes (síntomas, Early Stage)**. La inferencia corre **en el navegador**: sin servidor de modelos y sin Python en producción. Los modelos se descargan una sola vez al abrir la página.
 
-> **Herramienta académica, no es un diagnóstico médico.**
-
 ## Cómo se convirtieron los modelos (Plan B)
 Se intentó primero `tensorflowjs_converter`, pero **falló**: la única versión instalable en este entorno (`tensorflowjs 3.18`) es incompatible con NumPy 2 y no lee el formato Keras 3 (`.keras`). Se usó el **Plan B**:
 
@@ -52,14 +50,25 @@ No requiere variables de entorno ni claves. Los modelos pesan ~250 KB en total.
 ## Estructura
 ```
 app/
-├── data/                              resultados_*.json (copia de results/, métricas de "Sobre el modelo")
+├── data/                              resultados_*.json (copia de results/: métricas y gráficas)
+│                                      graficas_*.json (historial, matriz de confusión, CV vs sklearn)
 ├── public/models/{cancer,diabetes}/   model.json, preproc.json, examples.json
 ├── src/app/                           layout, página (pestañas) y estilos
 ├── src/components/                    formularios, tarjeta de resultado, "Sobre el modelo"
+├── src/components/charts/             gráficas en SVG/CSS propio (sin librerías), carga diferida
 ├── src/lib/                           inference.js (JS puro), info.js (métricas), carga de modelos, etiquetas
 ├── scripts/export_models.py           exportador Keras -> JSON
 └── test/                              verify.mjs y fixtures
 ```
+
+## Gráficas del modelo
+Cada pestaña tiene cuatro gráficas, dibujadas con SVG/CSS propio (sin dependencias nuevas) y cargadas de forma diferida (no se descargan hasta que se acercan a la pantalla):
+1. Loss y accuracy por época (entrenamiento continuo, validación discontinua) con la línea de la **Meta** (0.03 y 98.5 %) y la época cuyos pesos se conservaron (`EarlyStopping` con `restore_best_weights`).
+2. Matriz de confusión del test.
+3. Accuracy en validación cruzada (media ± desviación) de la red Keras frente a Regresión Logística, SVM, Random Forest y Gradient Boosting (eje desde 50 %).
+4. Tabla con loss y accuracy en train, validación, test y CV, indicando si se cumple la meta (en "Sobre el modelo").
+
+Los datos salen de `results/` (`history_*.csv`, `comparativa_modelos_*.csv`, `resultados_*.json`) y se copian a `data/graficas_*.json` con `python scripts/export_models.py`. La matriz de confusión se **recalcula** con el modelo y el split exportados y el script se detiene si no coincide con el reporte del notebook. En diabetes la loss de las curvas incluye la penalización L2 de Keras, por eso difiere un poco de la loss de la tabla.
 
 ## Limitaciones
 * Las métricas mostradas en "Sobre el modelo" se importan de `data/resultados_*.json` (copia de `results/resultados_*.json`): la meta (loss < 0.03 y accuracy > 0.985) **no se cumple en validación ni en CV** en ninguno de los dos modelos (en cáncer solo en test, con 86 muestras; en diabetes en ningún conjunto).

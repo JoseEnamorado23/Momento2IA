@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { predictFromInput } from "../lib/inference";
 import { CANCER_GROUPS, cancerField } from "../lib/labels";
-import ResultCard from "./ResultCard";
+import { ResultPanel } from "./ResultCard";
 
 export default function CancerForm({ bundle }) {
   const { model, preproc, examples } = bundle;
@@ -57,10 +57,11 @@ export default function CancerForm({ bundle }) {
   const nErr = Object.values(errors).filter(Boolean).length;
 
   return (
+    <div className="workbench">
     <form ref={formRef} onSubmit={submit} noValidate data-testid="form-cancer">
       <div className="actions">
-        <button type="button" className="btn btn--ghost" onClick={() => loadExample("negative")} data-testid="ex-benigno">Cargar ejemplo benigno</button>
-        <button type="button" className="btn btn--ghost" onClick={() => loadExample("positive")} data-testid="ex-maligno">Cargar ejemplo maligno</button>
+        <button type="button" className="chip" onClick={() => loadExample("negative")} data-testid="ex-benigno">Cargar ejemplo benigno</button>
+        <button type="button" className="chip" onClick={() => loadExample("positive")} data-testid="ex-maligno">Cargar ejemplo maligno</button>
         <button type="button" className="btn btn--link" onClick={clear}>Limpiar</button>
       </div>
       <p className="hint">Los ejemplos son filas reales del conjunto de test. Las medidas provienen de imágenes de biopsia (fine-needle aspirate).</p>
@@ -85,10 +86,9 @@ export default function CancerForm({ bundle }) {
           </div>
         </fieldset>
       ))}
-      <button type="submit" className="btn btn--primary" data-testid="submit-cancer">Predecir</button>
-      {proba !== null && (
-        <ResultCard proba={proba} positive="Maligno (M)" negative="Benigno (B)" probLabel="Probabilidad de malignidad" exampleLabel={exampleLabel} />
-      )}
+      <div className="submitbar"><button type="submit" className="btn btn--primary" data-testid="submit-cancer">Predecir</button></div>
     </form>
+    <ResultPanel proba={proba} positive="Maligno (M)" negative="Benigno (B)" probLabel="Probabilidad de malignidad" exampleLabel={exampleLabel} />
+    </div>
   );
 }

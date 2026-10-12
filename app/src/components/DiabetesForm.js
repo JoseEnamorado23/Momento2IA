@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { predictFromInput } from "../lib/inference";
 import { DIABETES_SYMPTOMS } from "../lib/labels";
-import ResultCard from "./ResultCard";
+import { ResultPanel } from "./ResultCard";
 
 export default function DiabetesForm({ bundle }) {
   const { model, preproc, examples } = bundle;
@@ -59,10 +59,11 @@ export default function DiabetesForm({ bundle }) {
   );
 
   return (
+    <div className="workbench">
     <form ref={formRef} onSubmit={submit} noValidate data-testid="form-diabetes">
       <div className="actions">
-        <button type="button" className="btn btn--ghost" onClick={() => loadExample("positive")} data-testid="ex-positivo">Cargar ejemplo positivo</button>
-        <button type="button" className="btn btn--ghost" onClick={() => loadExample("negative")} data-testid="ex-negativo">Cargar ejemplo negativo</button>
+        <button type="button" className="chip" onClick={() => loadExample("positive")} data-testid="ex-positivo">Cargar ejemplo positivo</button>
+        <button type="button" className="chip" onClick={() => loadExample("negative")} data-testid="ex-negativo">Cargar ejemplo negativo</button>
         <button type="button" className="btn btn--link" onClick={clear}>Limpiar</button>
       </div>
       <p className="hint">Los ejemplos son filas reales del conjunto de test. Los síntomas son autorreportados (Sí/No).</p>
@@ -99,10 +100,9 @@ export default function DiabetesForm({ bundle }) {
           ))}
         </div>
       </fieldset>
-      <button type="submit" className="btn btn--primary" data-testid="submit-diabetes">Predecir</button>
-      {proba !== null && (
-        <ResultCard proba={proba} positive="Positivo (riesgo de diabetes)" negative="Negativo" probLabel="Probabilidad de clase positiva" exampleLabel={exampleLabel} />
-      )}
+      <div className="submitbar"><button type="submit" className="btn btn--primary" data-testid="submit-diabetes">Predecir</button></div>
     </form>
+    <ResultPanel proba={proba} positive="Positivo (riesgo de diabetes)" negative="Negativo" probLabel="Probabilidad de clase positiva" exampleLabel={exampleLabel} />
+    </div>
   );
 }
