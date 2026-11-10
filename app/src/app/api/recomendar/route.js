@@ -9,7 +9,7 @@ const PROVIDERS = {
   xai: { url: "https://api.x.ai/v1/chat/completions", model: "grok-3-mini" },
   openai: { url: "https://api.openai.com/v1/chat/completions", model: "gpt-4o-mini" },
   groq: { url: "https://api.groq.com/openai/v1/chat/completions", model: "llama-3.3-70b-versatile" },
-  gemini: { url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-2.5-flash" },
+  gemini: { url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-3.8-flash" },
   openrouter: { url: "https://openrouter.ai/api/v1/chat/completions", model: "meta-llama/llama-3.3-70b-instruct:free" },
 };
 
