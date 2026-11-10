@@ -44,7 +44,7 @@ export default function Recommendation({ dataset, proba, context }) {
       <h4 className="reco__title">Recomendación generada por IA</h4>
       {phase === "idle" && (
         <>
-          <p className="hint">Un LLM (Grok) recibe esta predicción como entrada y redacta recomendaciones.</p>
+          <p className="hint">Un LLM recibe esta predicción como entrada y redacta recomendaciones.</p>
           <button type="button" className="btn btn--primary reco__btn" onClick={generate} data-testid="reco-generate">Generar recomendación</button>
         </>
       )}

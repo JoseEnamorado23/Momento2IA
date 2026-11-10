@@ -47,7 +47,12 @@ export async function POST(req) {
       signal: AbortSignal.timeout(50000),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) return bad(`El proveedor LLM respondió ${res.status}: ${data?.error?.message || data?.error || "error"}`, 502);
+    if (!res.ok) {
+      // Gemini a veces devuelve un arreglo [{ error: {...} }]; se normaliza para mostrar el motivo real.
+      const err = (Array.isArray(data) ? data[0] : data)?.error ?? data;
+      const msg = typeof err === "string" ? err : err?.message || JSON.stringify(err).slice(0, 300);
+      return bad(`El proveedor LLM (${name}, modelo ${process.env.LLM_MODEL || provider.model}) respondió ${res.status}: ${msg}`, 502);
+    }
     const text = data?.choices?.[0]?.message?.content?.trim();
     if (!text) return bad("El LLM devolvió una respuesta vacía", 502);
     return Response.json({ text, model: data.model ?? null });
