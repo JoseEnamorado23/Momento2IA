@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { pct } from "../lib/labels";
+import Recommendation from "./Recommendation";
 
 // Evita mostrar 0.0 % / 100.0 % cuando la probabilidad es extrema pero no exacta.
 const show = (p) => (p < 0.001 ? "< 0.1 %" : p > 0.999 ? "> 99.9 %" : pct(p, 1));
@@ -29,7 +30,7 @@ function Meter({ proba, negative, positive, label }) {
   );
 }
 
-function ResultCard({ proba, positive, negative, probLabel, exampleLabel }) {
+function ResultCard({ proba, positive, negative, probLabel, exampleLabel, dataset, context }) {
   const isPos = proba >= 0.5;
   const confidence = isPos ? proba : 1 - proba;
   return (
@@ -42,6 +43,7 @@ function ResultCard({ proba, positive, negative, probLabel, exampleLabel }) {
         <div><dt>Confianza en la clase predicha</dt><dd>{show(confidence)}</dd></div>
         {exampleLabel && <div><dt>Etiqueta real del ejemplo (test)</dt><dd>{exampleLabel}</dd></div>}
       </dl>
+      {dataset && context && <Recommendation key={proba} dataset={dataset} proba={proba} context={context} />}
     </section>
   );
 }

@@ -274,3 +274,20 @@ button, input, select { font-family: inherit; }
   .charts__note { grid-column: 1 / -1; }
   .chart-card { padding: 18px 18px 16px; }
 }
+
+/* ---------- Recomendación LLM + feedback (RL) ---------- */
+.reco { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.reco__title { margin: 0 0 6px; font-size: 1.05rem; }
+.reco__btn { width: 100%; }
+.reco__style { margin: 0 0 6px; color: var(--muted); font-size: 0.9rem; }
+.reco__text { white-space: pre-wrap; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; line-height: 1.5; }
+.reco__warn { margin: 6px 0 10px; font-size: 0.8rem; color: var(--muted); }
+.reco__rate { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.stars { display: inline-flex; }
+.star { background: none; border: 0; padding: 2px 4px; font-size: 1.7rem; line-height: 1; color: #c9c3df; cursor: pointer; }
+.star--on { color: #e0a100; }
+.star:disabled { cursor: default; }
+.reco__stats { margin-top: 12px; font-size: 0.9rem; }
+.reco__stats summary { cursor: pointer; font-weight: 600; }
+.reco__stats table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+.reco__stats th, .reco__stats td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }

@@ -12,6 +12,7 @@ export default function DiabetesForm({ bundle }) {
   const [errors, setErrors] = useState({});
   const [proba, setProba] = useState(null);
   const [exampleLabel, setExampleLabel] = useState(null);
+  const [context, setContext] = useState(null);
   const formRef = useRef(null);
 
   const setField = (k, v) => {
@@ -45,6 +46,11 @@ export default function DiabetesForm({ bundle }) {
     const first = Object.keys(empty).find((k) => errs[k]);
     if (first) { setProba(null); formRef.current?.querySelector(`[name="${first}"]`)?.focus(); return; }
     setProba(predictFromInput(model, preproc, { ...values, age: Number(values.age) }));
+    setContext({
+      Edad: Number(values.age),
+      Género: values.gender === "Male" ? "Hombre" : "Mujer",
+      ...Object.fromEntries(symptoms.map((k) => [DIABETES_SYMPTOMS[k], values[k] === "Yes" ? "Sí" : "No"])),
+    });
   };
 
   const clear = () => { setValues(empty); setErrors({}); setProba(null); setExampleLabel(null); };
@@ -102,7 +108,7 @@ export default function DiabetesForm({ bundle }) {
       </fieldset>
       <div className="submitbar"><button type="submit" className="btn btn--primary" data-testid="submit-diabetes">Predecir</button></div>
     </form>
-    <ResultPanel proba={proba} positive="Positivo (riesgo de diabetes)" negative="Negativo" probLabel="Probabilidad de clase positiva" exampleLabel={exampleLabel} />
+    <ResultPanel proba={proba} positive="Positivo (riesgo de diabetes)" negative="Negativo" probLabel="Probabilidad de clase positiva" exampleLabel={exampleLabel} dataset="diabetes" context={context} />
     </div>
   );
 }

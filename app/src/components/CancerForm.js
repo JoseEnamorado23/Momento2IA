@@ -12,6 +12,7 @@ export default function CancerForm({ bundle }) {
   const [errors, setErrors] = useState({});
   const [proba, setProba] = useState(null);
   const [exampleLabel, setExampleLabel] = useState(null);
+  const [context, setContext] = useState(null);
   const formRef = useRef(null);
 
   const setField = (k, v) => {
@@ -51,6 +52,8 @@ export default function CancerForm({ bundle }) {
     }
     const input = Object.fromEntries(keys.map((k) => [k, Number(String(values[k]).trim().replace(",", "."))]));
     setProba(predictFromInput(model, preproc, input));
+    // Contexto para el LLM: solo los promedios (10 valores) para mantener el prompt corto.
+    setContext(Object.fromEntries(keys.filter((k) => cancerField(k).group === "mean").map((k) => [`${cancerField(k).label} (promedio)`, input[k]])));
   };
 
   const clear = () => { setValues(empty); setErrors({}); setProba(null); setExampleLabel(null); };
@@ -88,7 +91,7 @@ export default function CancerForm({ bundle }) {
       ))}
       <div className="submitbar"><button type="submit" className="btn btn--primary" data-testid="submit-cancer">Predecir</button></div>
     </form>
-    <ResultPanel proba={proba} positive="Maligno (M)" negative="Benigno (B)" probLabel="Probabilidad de malignidad" exampleLabel={exampleLabel} />
+    <ResultPanel proba={proba} positive="Maligno (M)" negative="Benigno (B)" probLabel="Probabilidad de malignidad" exampleLabel={exampleLabel} dataset="cancer" context={context} />
     </div>
   );
 }

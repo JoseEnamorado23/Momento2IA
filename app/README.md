@@ -70,6 +70,20 @@ Cada pestaña tiene cuatro gráficas, dibujadas con SVG/CSS propio (sin dependen
 
 Los datos salen de `results/` (`history_*.csv`, `comparativa_modelos_*.csv`, `resultados_*.json`) y se copian a `data/graficas_*.json` con `python scripts/export_models.py`. La matriz de confusión se **recalcula** con el modelo y el split exportados y el script se detiene si no coincide con el reporte del notebook. En diabetes la loss de las curvas incluye la penalización L2 de Keras, por eso difiere un poco de la loss de la tabla.
 
+## Recomendación con LLM y aprendizaje por refuerzo
+**LLM (pipeline):** tras la predicción, el botón "Generar recomendación" envía la clase predicha, su probabilidad y los datos de entrada a la ruta `src/app/api/recomendar/route.js`. Esta construye un prompt (`src/lib/prompts.js`) con un mensaje de sistema que fija el rol (asistente informativo, sin diagnóstico ni medicación, texto plano en español) y un mensaje de usuario con la predicción, y llama al modelo **Grok de xAI** mediante su API compatible con OpenAI. El LLM devuelve recomendaciones sobre los siguientes pasos y cuándo acudir a un especialista. La API key vive solo en el servidor.
+
+**Aprendizaje por refuerzo (feedback):** el usuario califica la recomendación de 1 a 5 estrellas. Un agente de **bandido multibrazo con Thompson sampling** (`src/lib/bandit.js`) elige, antes de cada generación, uno de tres estilos de prompt (conciso, detallado, empático). La calificación normalizada a [0, 1] es la recompensa y actualiza la distribución Beta del estilo elegido, de modo que con más feedback el agente prefiere los estilos mejor calificados. La interfaz muestra qué estilo se usó y una tabla con usos, calificación media y valor estimado por estilo.
+
+**Persistencia:** como en Vercel el servidor no guarda estado, las estadísticas del agente se guardan en el `localStorage` del navegador (aprenden por navegador; botón "Reiniciar aprendizaje").
+
+**Variables de entorno** (en `.env.local` y en Vercel → Settings → Environment Variables):
+```
+LLM_PROVIDER=grok     # grok | openai | groq
+LLM_API_KEY=...       # nunca se commitea
+LLM_MODEL=...         # opcional; por defecto grok-3-mini
+```
+
 ## Limitaciones
 * Las métricas mostradas en "Sobre el modelo" se importan de `data/resultados_*.json` (copia de `results/resultados_*.json`): la meta (loss < 0.03 y accuracy > 0.985) **no se cumple en validación ni en CV** en ninguno de los dos modelos (en cáncer solo en test, con 86 muestras; en diabetes en ningún conjunto).
 * Los ejemplos son filas reales del test; el modelo de diabetes se entrenó con 251 pacientes únicos de un solo hospital y síntomas autorreportados.
